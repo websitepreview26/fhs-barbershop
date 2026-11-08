@@ -19,3 +19,11 @@ Rounded grouped lists, a translucent floating action panel and bottom sheets. Th
 Swipe right from the first 28 px of the app to go back. The previous screen appears with rear parallax; the commit threshold is 35% of the screen width. Short gestures snap back. Browser Back and the visible back button share the same screen history. Form values and previous scroll positions persist. Vertical scrolling, form controls and multi-touch are not intercepted. Sheets support downward dismissal from the handle and rightward edge dismissal.
 
 Reduced motion, reduced transparency and iPhone safe areas are supported. This is a web approximation, not native UIKit Liquid Glass. Touch behavior still needs a real-device check on iPhone.
+
+## Header safe areas (v5)
+
+The official Telegram WebApp SDK loads in `<head>` before application scripts. It requests native safe areas and maintains its CSS variables when the host reports `safe_area_changed` / `content_safe_area_changed`. No custom polling, device sniffing, guessed toolbar height or resize offset is used.
+
+The header uses `max(browser device inset, Telegram device inset) + Telegram content inset + design spacing`. The device inset is not counted twice. Page gutters and the swipe-preview header use the same variables, including asymmetric horizontal insets in landscape. Breakpoints only change design spacing; they cannot replace the safe-area calculation. Outside Telegram, the variables fall back to the browser's `env(safe-area-inset-*)` values. A host that does not expose Telegram safe areas cannot supply its control dimensions; no guessed fallback height is substituted.
+
+Reference: https://core.telegram.org/bots/webapps#safeareainset
