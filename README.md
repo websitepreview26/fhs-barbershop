@@ -11,3 +11,11 @@
 Демо-записи и введённые данные хранятся только в localStorage этого браузера (`fhs-bookings-v2`). Сервер отсутствует, настоящие записи в YCLIENTS не создаются, СМС и письма не отправляются. Старые демо-записи первой версии не переносятся, поскольку изменились мастера и услуги.
 
 Для Telegram Mini App: HTTPS-адрес можно привязать к кнопке бота. Для реальной записи нужны серверная интеграция с YCLIENTS, проверка Telegram initData, реальные расписания, атомарное бронирование и тексты согласий от барбершопа. Секретные ключи нельзя добавлять во фронтенд.
+
+## iOS-style navigation (v4)
+
+Rounded grouped lists, a translucent floating action panel and bottom sheets. The glass-panel and swipe-back patterns were adapted from the local MovieDuo project. Buttons, selection indicators and step labels have no circular outlines.
+
+Swipe right from the first 28 px of the app to go back. The previous screen appears with rear parallax; the commit threshold is 35% of the screen width. Short gestures snap back. Browser Back and the visible back button share the same screen history. Form values and previous scroll positions persist. Vertical scrolling, form controls and multi-touch are not intercepted. Sheets support downward dismissal from the handle and rightward edge dismissal.
+
+Reduced motion, reduced transparency and iPhone safe areas are supported. This is a web approximation, not native UIKit Liquid Glass. Touch behavior still needs a real-device check on iPhone.
