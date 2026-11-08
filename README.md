@@ -1,27 +1,21 @@
-# Fucking Stylish Haircut — booking prototype
+# Fucking Stylish Haircut — прототип записи
 
-Live site: https://websitepreview26.github.io/fhs-barbershop/
+Сайт: https://websitepreview26.github.io/fhs-barbershop/
 
-Static HTML/CSS/JavaScript, no build or dependencies. Serve this directory over HTTP(S), or open index.html for a basic local preview.
+Статический HTML/CSS/JavaScript без сборки. Для локального просмотра откройте `index.html`.
 
-## Current architecture: v9
+Тёмный интерфейс FHS с лаймовыми акцентами, без рекламного баннера и слоганов. Механика записи по YCLIENTS: мастер → услуги → календарь и время → детали записи и контакты. Есть карточки специалистов, данные барбершопа, редактирование выбора, список демо-записей, перенос, отмена и экспорт календаря с выбранным напоминанием.
 
-One fixed-height flex application shell contains three normal-flow siblings: header, a single overflow-y:auto scroll view, and action bar. The document itself never scrolls. The header/action bar are not sticky or fixed; they remain visible because only the middle sibling scrolls. The action bar does not cover the final row of content.
+Все пять специалистов, их фотографии и число отзывов сверены с https://b125329.yclients.com/ 8 ноября 2026. Адрес, контакты и часы работы перенесены со скриншотов. Услуги и прайс Леонида взяты со скриншота; прайс других мастеров демонстрационный и требует уточнения. Фотографии мастеров сохранены локально из публичного виджета. В profiles доступны подборки реальных отзывов и оценок (reviews.js); длинные комментарии приведены короткими отрывками. Полный список доступен по ссылке на профиль специалиста в YCLIENTS. Данные не синхронизируются автоматически. Расписание демонстрационное, начинается с текущего дня в часовом поясе Минска. Длительность услуг учитывается при выборе времени и завершении рабочего дня.
 
-There are no CSS blur filters, transformed screen layers, cloned DOM trees, gesture-time layout reads, animation timers, or global touch handlers. History stores only route names and scroll offsets. Edge-back uses passive pointerdown/up/cancel listeners scoped to the content view. CSS pan-y gives vertical gestures to WebKit; short/vertical/cancelled gestures do not navigate. Browser and Telegram Back buttons use the same route history. Native dialog handles modal focus and scrolling, without custom animation layers.
+Демо-записи и введённые данные хранятся только в localStorage этого браузера (`fhs-bookings-v2`). Сервер отсутствует, настоящие записи в YCLIENTS не создаются, СМС и письма не отправляются. Старые демо-записи первой версии не переносятся, поскольку изменились мастера и услуги.
 
-The official Telegram SDK is vendored unchanged at assets/telegram-web-app.js (downloaded from https://telegram.org/js/telegram-web-app.js on 2026-11-08). It owns viewport/safe-area updates. The app calls ready once after deferred application scripts run and disables Telegram's content-level vertical minimize gesture on supported clients. It does not request fullscreen, expand the viewport, repeatedly request insets, or infer toolbar heights. Header spacing combines the maximum of browser/Telegram device insets with Telegram content insets. SDK and app scripts are deferred; a dark HTML background is available before scripts/styles load.
+Для Telegram Mini App: HTTPS-адрес можно привязать к кнопке бота. Для реальной записи нужны серверная интеграция с YCLIENTS, проверка Telegram initData, реальные расписания, атомарное бронирование и тексты согласий от барбершопа. Секретные ключи нельзя добавлять во фронтенд.
 
-## Functionality and data
+## iOS-style navigation (v4)
 
-Master → services → date/time → review and contacts. Includes specialist profiles and real review excerpts, price/duration totals, contact validation, local demo-booking storage, rescheduling, cancellation and calendar export. Appointments are demonstrations stored in localStorage (`fhs-bookings-v2`), not real YCLIENTS bookings; SMS and email are not sent.
+Rounded grouped lists, a translucent floating action panel and bottom sheets. The glass-panel and swipe-back patterns were adapted from the local MovieDuo project. Buttons, selection indicators and step labels have no circular outlines.
 
-All five specialists, photographs and review counts were checked against https://b125329.yclients.com/ on 2026-11-08. Long comments are short excerpts; each profile links to the full original list. Leonid's services/prices were taken from supplied screenshots. Other specialists' prices and all availability remain demonstration data. Address/contact/opening hours were taken from supplied screenshots.
+Swipe right from the first 28 px of the app to go back. The previous screen appears with rear parallax; the commit threshold is 35% of the screen width. Short gestures snap back. Browser Back and the visible back button share the same screen history. Form values and previous scroll positions persist. Vertical scrolling, form controls and multi-touch are not intercepted. Sheets support downward dismissal from the handle and rightward edge dismissal.
 
-## Validation
-
-Run `node --test tests/*.test.cjs`. Coverage includes booking persistence, form/scroll preservation, browser navigation, edge gesture cancellation/completion, 200 repeat routes without DOM cloning, modal lifecycle, and protection against native request/viewport feedback loops. Browser validation is separate from these tests. Real Telegram WKWebView behavior cannot be established by mocked host tests alone.
-
-## Telegram Mini App
-
-Use the HTTPS site URL for the bot's app button. Real bookings require a backend, YCLIENTS integration, verified Telegram initData, authoritative availability and atomic reservation. Keep all integration secrets off the frontend.
+Reduced motion, reduced transparency and iPhone safe areas are supported. This is a web approximation, not native UIKit Liquid Glass. Touch behavior still needs a real-device check on iPhone.
