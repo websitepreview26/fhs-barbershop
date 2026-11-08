@@ -1,14 +1,14 @@
 'use strict';
-// The official SDK owns safe-area requests, native subscriptions and --tg-*.
-// Do not request native measurements from viewport/resize callbacks: some
-// clients answer those requests with another viewport notification.
+// Telegram owns viewport/safe-area notifications. The app never requests them
+// from resize callbacks, changes fullscreen mode, or writes their measurements.
 (() => {
   const app = window.Telegram?.WebApp;
   if (!app || app.platform === 'unknown') return;
-  const ready = () => app.ready();
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', ready, {once: true});
-  } else {
-    ready();
+  function start() {
+    // Let the app's single native scroll view own vertical content gestures.
+    if (app.isVersionAtLeast?.('7.7')) app.disableVerticalSwipes?.();
+    app.ready();
   }
+  if (document.readyState !== 'complete') document.addEventListener('DOMContentLoaded', start, {once:true});
+  else start();
 })();
