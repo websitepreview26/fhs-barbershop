@@ -7,9 +7,9 @@
   --app-max-width: 620px;
   --page-gutter: 22px;
   --header-spacing: 17px;
-  --safe-top: calc(max(env(safe-area-inset-top, 0px), var(--tg-safe-area-inset-top, 0px)) + var(--tg-content-safe-area-inset-top, 0px));
-  --safe-left: calc(max(env(safe-area-inset-left, 0px), var(--tg-safe-area-inset-left, 0px)) + var(--tg-content-safe-area-inset-left, 0px));
-  --safe-right: calc(max(env(safe-area-inset-right, 0px), var(--tg-safe-area-inset-right, 0px)) + var(--tg-content-safe-area-inset-right, 0px));
+  --safe-top: calc(max(env(safe-area-inset-top, 0px), var(--host-system-safe-top, var(--tg-safe-area-inset-top, 0px))) + var(--host-content-safe-top, var(--tg-content-safe-area-inset-top, 0px)));
+  --safe-left: calc(max(env(safe-area-inset-left, 0px), var(--host-system-safe-left, var(--tg-safe-area-inset-left, 0px))) + var(--host-content-safe-left, var(--tg-content-safe-area-inset-left, 0px)));
+  --safe-right: calc(max(env(safe-area-inset-right, 0px), var(--host-system-safe-right, var(--tg-safe-area-inset-right, 0px))) + var(--host-content-safe-right, var(--tg-content-safe-area-inset-right, 0px)));
   --gutter-left: calc(var(--page-gutter) + var(--safe-left));
   --gutter-right: calc(var(--page-gutter) + var(--safe-right));
   --header-inline-size: calc(min(100vw, var(--app-max-width)) - var(--gutter-left) - var(--gutter-right));
@@ -19,3 +19,6 @@
 .swiping .app>*{visibility:inherit}.swiping>.app>*,.swiping>.actions{visibility:hidden}.swipe-stage .header{position:fixed;top:0;left:50%;transform:translateX(-50%);width:var(--header-inline-size);margin-left:calc((var(--gutter-left) - var(--gutter-right))/2);z-index:5}.swipe-stage .actions{visibility:visible}.swipe-stage .app>*{visibility:visible}.swipe-stage .app{overflow:visible}.swipe-stage .screen-enter,.swipe-stage .screen-back{animation:none}
 /* A sheet announces its title first; focus rings remain on keyboard controls. */
 dialog h2[tabindex="-1"]:focus{outline:none}
+
+/* Opt-in layout diagnostics contain measurements only, never Telegram user data. */
+#layout-diagnostics{padding:18px;margin:15px 0;border-radius:18px;background:var(--panel);color:var(--muted);font-size:12px}#layout-diagnostics pre{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6;font-size:11px}

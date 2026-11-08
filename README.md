@@ -27,3 +27,11 @@ The official Telegram WebApp SDK loads in `<head>` before application scripts. I
 The header uses `max(browser device inset, Telegram device inset) + Telegram content inset + design spacing`. The device inset is not counted twice. Page gutters and the swipe-preview header use the same variables, including asymmetric horizontal insets in landscape. Breakpoints only change design spacing; they cannot replace the safe-area calculation. Outside Telegram, the variables fall back to the browser's `env(safe-area-inset-*)` values. A host that does not expose Telegram safe areas cannot supply its control dimensions; no guessed fallback height is substituted.
 
 Reference: https://core.telegram.org/bots/webapps#safeareainset
+
+## Telegram host initialization (v7)
+
+The official SDK is vendored unchanged at `assets/telegram-web-app.js` from https://telegram.org/js/telegram-web-app.js (downloaded 2026-11-08), avoiding a runtime dependency on that origin. `telegram-layout.js` subscribes to both documented WebApp safe-area events and raw WebView native events before calling `ready()` / `expand()`. It explicitly requests both areas on clients supporting Bot API 8.0+, and again after stable viewport/fullscreen changes or activation. Raw native measurements remain authoritative if SDK snapshot getters lag. No authentication or user data is read. No device-specific toolbar-height fallback is used.
+
+For troubleshooting inside the actual Mini App, append `?layout-debug=1` to the site URL. This opt-in panel shows only SDK version/platform, measured insets, received event names and computed header padding; it contains no initData or user details. If Telegram reuses an old page, use its Reload Page menu action before inspecting.
+
+Run host integration tests: `node --test tests/telegram-layout.test.cjs`.
