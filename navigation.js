@@ -2,6 +2,7 @@
 // One live scroll container. History stores routes and offsets, never DOM trees.
 const scroller = document.querySelector('#app-scroll');
 const telegramApp = window.Telegram?.WebApp;
+const nativeBack = telegramApp?.platform !== 'unknown' && telegramApp?.isVersionAtLeast?.('6.1') ? telegramApp.BackButton : null;
 let session = Date.now().toString(36), position = 0, pendingBack = false;
 let routes = [{screen: state.screen, scroll: 0}];
 window.history.replaceState({fhsSession: session, position: 0}, '');
@@ -9,7 +10,7 @@ window.history.replaceState({fhsSession: session, position: 0}, '');
 function scrollContentTo(top) { scroller.scrollTop = top; }
 function canNavigateBack() { return position > 0; }
 function updateNativeBack() {
-  const button = telegramApp?.BackButton;
+  const button = nativeBack;
   if (!button) return;
   if (canNavigateBack() || modal.open) button.show();
   else button.hide();
@@ -101,5 +102,5 @@ function attachEdgeBack(element, enabled, onBack) {
 }
 attachEdgeBack(scroller, () => canNavigateBack() && !modal.open, navigateBack);
 attachEdgeBack(modal, () => modal.open, closeSheet);
-telegramApp?.BackButton?.onClick(navigateBack);
+nativeBack?.onClick(navigateBack);
 render();
